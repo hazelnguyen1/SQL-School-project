@@ -1,4 +1,4 @@
-# SQL-School-project
+# SQL-School-project: using SQL Server Management Studio
 School's database for students' information: 
 Created a database with different aspects of a student’s life inside of a campus. This included classes, professors, clubs, dorm housing, … 
 Each of these are a different table that had a primary key, and these primary keys will be foreign keys in other tables in order to link these tables together.
