@@ -162,6 +162,8 @@ CREATE TABLE student (
   DORM_NAME varchar(10) DEFAULT NULL
 );
 --now we define foreign keys to connect tables to each other
+
+----------------------
 --table class 
 ALTER TABLE class
 ADD FOREIGN KEY (CRS_CODE) REFERENCES course(CRS_CODE);
