@@ -1,0 +1,209 @@
+--Database: schoolproject
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table building
+--
+
+CREATE TABLE building(
+  BLDG_CODE varchar(3) NOT NULL PRIMARY KEY,
+  BLDG_NAME varchar(15) NOT NULL,
+  BLDG_LOCATION char(15) NOT NULL
+  );
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table class
+--
+
+CREATE TABLE class (
+  CLASS_CODE decimal(10,0) NOT NULL PRIMARY KEY,
+  CLASS_SECTION decimal(10,0) NOT NULL,
+  CLASS_TIME time NOT NULL,
+  CRS_CODE decimal(10,0) NOT NULL, 
+  PROF_NUM decimal(10,0) NOT NULL,
+  ROOM_CODE varchar(3)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table club
+--
+
+CREATE TABLE club (
+  CLUB_ID char(8) NOT NULL PRIMARY KEY,
+  ROOM_CODE varchar(3) NOT NULL ,
+  CLUB_NAME varchar(35) NOT NULL,
+  CLUB_PRESIDENT varchar(35) NOT NULL
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table course
+--
+
+CREATE TABLE course (
+  CRS_CODE decimal(10,0) NOT NULL PRIMARY KEY,
+  DEPT_CODE decimal(10,0) NOT NULL ,
+  CRS_TITLE text NOT NULL,
+  CRS_DESCRIPTION text NOT NULL,
+  CRS_CREDIT decimal(10,0) DEFAULT NULL
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table department
+--
+
+CREATE TABLE department (
+  DEPT_CODE decimal(10,0) NOT NULL PRIMARY KEY,
+  DEPT_NAME text NOT NULL,
+  SCHOOL_CODE decimal(10,0) DEFAULT NULL 
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table enroll
+--
+
+CREATE TABLE enroll (
+  CLASS_CODE decimal(10,0) NOT NULL ,
+  ENROLL_DATE date NOT NULL,
+  ENROLL_GRADE varchar(9) DEFAULT NULL,
+  STU_NUM decimal(10,0) NOT NULL ,
+  PRIMARY KEY (STU_NUM,CLASS_CODE)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table dorm
+--
+
+CREATE TABLE dorm (
+  DORM_NAME varchar(10) NOT NULL PRIMARY KEY,
+  MAXIMUM_OCCUPANTS decimal(10,0) NOT NULL,
+  DORM_ADDRESS varchar(10) DEFAULT NULL
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table professor
+--
+
+CREATE TABLE professor (
+  PROF_NUM decimal(10,0) NOT NULL PRIMARY KEY,
+  DEPT_CODE decimal(10,0) DEFAULT NULL,
+  PROF_SPECIALTY varchar(15) DEFAULT NULL,
+  PROF_RANK decimal(10,0) DEFAULT NULL,
+  PROF_LNAME varchar(15) DEFAULT NULL,
+  PROF_FNAME varchar(15) DEFAULT NULL,
+  PROF_INITIAL varchar(3) DEFAULT NULL,
+  PROF_EMAIL varchar(30) DEFAULT NULL
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table room
+--
+
+CREATE TABLE room (
+  ROOM_CODE varchar(3) NOT NULL PRIMARY KEY,
+  ROOM_TYPE text,
+  BLDG_CODE varchar(3) DEFAULT NULL 
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table roster
+--
+
+CREATE TABLE roster (
+  STU_NUM decimal(10,0) NOT NULL ,
+  RENEWAL_DATE date NOT NULL,
+  CLUB_ID char(8) NOT NULL ,
+  PRIMARY KEY (STU_NUM,CLUB_ID)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table school
+--
+
+CREATE TABLE school (
+  SCHOOL_CODE decimal(10,0) NOT NULL PRIMARY KEY,
+  SCHOOL_NAME varchar(15) NOT NULL
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table student
+--
+
+CREATE TABLE student (
+  STU_NUM decimal(10,0) NOT NULL PRIMARY KEY,
+  STU_LNAME varchar(15) DEFAULT NULL,
+  STU_FNAME varchar(15) DEFAULT NULL,
+  STU_INITIAL varchar(3) DEFAULT NULL,
+  STU_EMAIL varchar(30) DEFAULT NULL,
+  DEPT_CODE decimal(10,0) NOT NULL ,
+  DORM_NAME varchar(10) DEFAULT NULL
+);
+--now we define foreign keys to connect tables to each other
+--table class 
+ALTER TABLE class
+ADD FOREIGN KEY (CRS_CODE) REFERENCES course(CRS_CODE);
+ALTER TABLE class
+ADD FOREIGN KEY (PROF_NUM) REFERENCES professor(PROF_NUM);
+ALTER TABLE class
+ADD FOREIGN KEY (ROOM_CODE) REFERENCES room(ROOM_CODE);
+
+--table club
+ALTER TABLE club
+ADD FOREIGN KEY (ROOM_CODE) REFERENCES room(ROOM_CODE);
+
+--table course 
+ALTER TABLE course
+ADD FOREIGN KEY (DEPT_CODE) REFERENCES department(DEPT_CODE);
+
+--table department
+ALTER TABLE department
+ADD FOREIGN KEY (SCHOOL_CODE) REFERENCES school(SCHOOL_CODE);
+
+--table enroll
+ALTER TABLE enroll
+ADD FOREIGN KEY (CLASS_CODE) REFERENCES class(CLASS_CODE);
+ALTER TABLE enroll
+ADD FOREIGN KEY (STU_NUM) REFERENCES student(STU_NUM);
+
+--table professor
+ALTER TABLE professor
+ADD FOREIGN KEY (DEPT_CODE) REFERENCES department(DEPT_CODE);
+
+ --table room
+ALTER TABLE room
+ADD FOREIGN KEY (BLDG_CODE) REFERENCES building(BLDG_CODE)
+
+ --table roster
+ALTER TABLE roster
+ADD FOREIGN KEY (STU_NUM) REFERENCES student(STU_NUM)
+ALTER TABLE roster
+ADD FOREIGN KEY (CLUB_ID) REFERENCES club(CLUB_ID)
+
+  --table student
+ALTER TABLE student
+ADD FOREIGN KEY (DEPT_CODE) REFERENCES department(DEPT_CODE)
+ALTER TABLE student
+ADD FOREIGN KEY (DORM_NAME) REFERENCES dorm(DORM_NAME)
